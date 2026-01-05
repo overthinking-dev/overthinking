@@ -48,9 +48,14 @@ class GitHubProjectsLoader {
     formatDate(dateString) {
         const date = new Date(dateString);
         const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+       // Приводим обе даты к UTC для корректного сравнения
+        const dateUTC = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+        const nowUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
         
+        const diffTime = Math.abs(nowUTC - dateUTC);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return 'сегодня';
         if (diffDays === 1) return 'вчера';
         if (diffDays < 7) return `${diffDays} дней назад`;
         if (diffDays < 30) return `${Math.floor(diffDays / 7)} недель назад`;
@@ -1842,3 +1847,4 @@ style.textContent = `
 `;
 
 document.head.appendChild(style);
+
